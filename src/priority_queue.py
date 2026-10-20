@@ -2,8 +2,9 @@ from simple_queue import SimpleQueue
 
 class PriorityQueue:
     LEVELS = 5
+
     def __init__(self):
-        self._queue = {i: SimpleQueue() for i in range(1, self.LEVELS +1)}
+        self._queues = {i: SimpleQueue() for i in range(1, self.LEVELS + 1)}  # FIX: _queues
         self._size = 0
 
     def _normalize(self, p):
@@ -25,7 +26,7 @@ class PriorityQueue:
                 self._size -= 1
                 return self._queues[p].dequeue()
         raise IndexError("Cola de Prioridad vacía")
-    
+
     def front(self):
         for p in range(self.LEVELS, 0, -1):
             if not self._queues[p].is_empty():
@@ -45,7 +46,7 @@ class PriorityQueue:
         return self._size
 
     def a_list(self):
-        "Devuelve en orden de antención (5→1) para visualización."
+        """Devuelve en orden de atención (5→1) para visualización."""
         result = []
         for p in range(self.LEVELS, 0, -1):
             result.extend(self._queues[p].a_list())
@@ -53,4 +54,3 @@ class PriorityQueue:
 
     def __len__(self):
         return self._size
-    

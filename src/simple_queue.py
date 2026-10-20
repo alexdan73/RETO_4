@@ -10,7 +10,7 @@ class SimpleQueue:
         new_node = SimpleNode(value)
         if self._queue is None:
             self.head = new_node
-            self.las = new_node
+            self._queue = new_node          # FIX: era self.las
         else:
             self._queue.next = new_node
             self._queue = new_node
@@ -27,27 +27,26 @@ class SimpleQueue:
         if self.head is None:
             self._queue = None
         self._size -= 1
-
         return value
 
     def front(self):
         if self.is_empty():
-            raise IndexError("Cola vacía: no se puede hacer dequeue")
+            raise IndexError("Cola vacía: no se puede consultar front")  # FIX
         return self.head.value
 
     def front_insert(self, value):
-         "Reinsertar al frente (usado por deshacer)"
-         new_node = SimpleNode(value, self.head)
-         self.head = new_node
-         if self._queue is None:
-             self._queue = new_node
-         self._size += 1
+        """Reinsertar al frente (usado por deshacer)."""           # FIX: docstring
+        new_node = SimpleNode(value, self.head)
+        self.head = new_node
+        if self._queue is None:
+            self._queue = new_node
+        self._size += 1
 
     def size(self):
         return self._size
 
     def a_list(self):
-        result =[]
+        result = []
         current = self.head
         while current:
             result.append(current.value)
@@ -56,5 +55,3 @@ class SimpleQueue:
 
     def __len__(self):
         return self._size
-
-    

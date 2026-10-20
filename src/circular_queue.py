@@ -47,16 +47,22 @@ class CircularQueue:
         self._size += 1
 
     def last_remove(self):
-        "Elimina el último enqueued. Usado por deshacer ENVIAR_A_ESPERA"
+        """Elimina el último enqueued. Usado por deshacer ENVIAR_A_ESPERA."""
         if self.is_empty():
             raise IndexError("Cola circular vacía")
+
+        # FIX: caso de un solo nodo
         if self._size == 1:
-            value = self._queue.next
+            value = self._queue.value          # era self._queue.next
             self._queue = None
             self._size = 0
+            return value
+
+        # FIX: el loop debe comparar penultimate.next con _queue
         penultimate = self._queue.next
-        while penultimate != self._queue:
+        while penultimate.next != self._queue:   # era penultimate != self._queue
             penultimate = penultimate.next
+
         value = self._queue.value
         penultimate.next = self._queue.next
         self._queue = penultimate
@@ -78,11 +84,3 @@ class CircularQueue:
 
     def __len__(self):
         return self._size
-
-    
-
-
-
-    
-
-        

@@ -6,13 +6,15 @@ from simple_queue import SimpleQueue
 from circular_queue import CircularQueue
 from priority_queue import PriorityQueue
 
+
 def _measure(fn, repetitions=5):
     times = []
     for _ in range(repetitions):
         t_0 = time.perf_counter()
         fn()
-        times.append(time.perf_counter - t_0)
-    return sum(times)/len(times)
+        times.append(time.perf_counter() - t_0)    # FIX: agregar ()
+    return sum(times) / len(times)
+
 
 def run_benchmarks():
     print("\n" + "=" * 60)
@@ -36,49 +38,56 @@ def run_benchmarks():
     for i in range(5000):
         _list.insert(i)
     for label, target in [("inicio", 0), ("medio", 2500), ("fin", 4999)]:
-        def search(obj = target):
+        def search(obj=target):
             _list.search(lambda v: v == obj)
         print(f"  {label:>6}: {_measure(search):.8f} s")
 
-     # 3) Eliminación simple vs doble
+    # 3) Eliminación simple vs doble
     print("\n[3] Eliminación en ListaSimple vs ListaDoble (n=2000)")
     def delete_simple():
-        _list = SimpleList()
+        lst = SimpleList()
         for i in range(2000):
-            _list.insert({'v': i})
-        _list.delete(lambda e: e['v'] == 1000)
+            lst.insert({'v': i})
+        lst.delete(lambda e: e['v'] == 1000)
 
     def delete_double():
-        _listd = DoubleList()
+        lstd = DoubleList()
         for i in range(2000):
-            _listd.insert_sort({'v': i}, lambda e: e['v'])
-        _listd.delete(lambda e: e['v'] == 1000)
+            lstd.insert_sort({'v': i}, lambda e: e['v'])
+        lstd.delete(lambda e: e['v'] == 1000)
+
     print(f"  ListaSimple: {_measure(delete_simple):.6f} s")
     print(f"  ListaDoble:  {_measure(delete_double):.6f} s")
 
-      # 4) Throughput colas (10k enq + 10k deq)
+    # 4) Throughput colas (10k enq + 10k deq)
     print("\n[4] Throughput enqueue+dequeue (10k cada uno)")
 
     def th_simple():
         simp_que = SimpleQueue()
-        for i in range(10000): simp_que.enqueue(i)
-        for _ in range(10000): simp_que.dequeue()
+        for i in range(10000):
+            simp_que.enqueue(i)
+        for _ in range(10000):
+            simp_que.dequeue()
 
     def th_circular():
-        cirp_que = CircularQueue()
-        for i in range(10000): cirp_que.enqueue(i)
-        for _ in range(10000): cirp_que.dequeue()
+        circ_que = CircularQueue()
+        for i in range(10000):
+            circ_que.enqueue(i)
+        for _ in range(10000):
+            circ_que.dequeue()
 
     def th_priority():
-        priori_que = PriorityQueue()
-        for i in range(10000): priori_que.enqueue({'v': i}, (i % 5) + 1)
-        for _ in range(10000): priori_que.dequeue()
+        prio_que = PriorityQueue()
+        for i in range(10000):
+            prio_que.enqueue({'v': i}, (i % 5) + 1)
+        for _ in range(10000):
+            prio_que.dequeue()
 
     for label, fn in [("ColaSimple", th_simple),
-                        ("ColaCircular", th_circular),
-                        ("ColaPrioridad", th_priority)]:
+                      ("ColaCircular", th_circular),
+                      ("ColaPrioridad", th_priority)]:
         t = _measure(fn)
-        print(f" {label:>14}: {t:.6f} s ({20000/t:,.0f} ops/s)")
+        print(f"  {label:>14}: {t:.6f} s ({20000/t:,.0f} ops/s)")
 
     print("\nInsights:")
     print(" 1) La inserción al final es O(1) por el puntero tail.")
@@ -86,5 +95,6 @@ def run_benchmarks():
     print(" 3) La lista doble agiliza eliminación pero duplica memoria.")
     print("=" * 60)
 
-    if __name__ == "__main__":
-        run_benchmarks()
+
+if __name__ == "__main__":       # FIX: dedent al nivel del módulo
+    run_benchmarks()

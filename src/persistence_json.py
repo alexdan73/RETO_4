@@ -1,15 +1,13 @@
-
-"""Exportar/Importar historial y esperas en JSON. Módulo defensivo.
-    Maneja archivos ausentes, JSON corrupto y registros con estructura ´
-    inválida sin romper la ejecución del sistema.
-"""
+"""Exportar/Importar historial y esperas en JSON. Módulo defensivo."""
 import json
 import os
 
-def save_dir(path):
-    dir = os.path.dirname(path)
-    if dir:
-        os.makedirs(dir, exist_ok=True)
+
+def _save_dir(path):
+    dir_ = os.path.dirname(path)
+    if dir_:
+        os.makedirs(dir_, exist_ok=True)
+
 
 def _load_json(path):
     if not os.path.exists(path):
@@ -17,7 +15,7 @@ def _load_json(path):
         return None
     try:
         with open(path, 'r', encoding='utf-8') as f:
-           return json.load(f) 
+            return json.load(f)
     except json.JSONDecodeError as e:
         print(f"  ⚠ JSON corrupto en {path}: {e} (se omite)")
         return None
@@ -25,16 +23,19 @@ def _load_json(path):
         print(f"  ⚠ Error leyendo {path}: {e}")
         return None
 
+
 def export_history(double_list, path):
     try:
-        save_dir(path)
+        _save_dir(path)
         with open(path, 'w', encoding='utf-8') as f:
-            json.dump({'semestres': double_list.front_traverse()}, f, indent = 2, ensure_ascii = False)
+            json.dump({'semestres': double_list.loop_forward()},   # FIX
+                      f, indent=2, ensure_ascii=False)
         return True
     except (OSError, IOError) as e:
         print(f"  ⚠ No se pudo exportar a {path}: {e}")
         return False
-    
+
+
 def import_history(double_list, path):
     data = _load_json(path)
     if data is None:
@@ -51,19 +52,21 @@ def import_history(double_list, path):
         else:
             print("  ⚠ Semestre inválido, se omite")
     return imports
+
+
 def export_waits(circular, priority, path):
-       try:
-           save_dir(path)
-        
-           with open(path, 'w', encoding='utf-8') as f:
-                json.dump({
-                    'circular': circular.a_list(),
-                    'prioridad': priority.a_list()
-                }, f, indent=2, ensure_ascii=False)
-           return True
-       except (OSError, IOError) as e:
-            print(f"  ⚠ No se pudo exportar a {path}: {e}")
-            return False
+    try:
+        _save_dir(path)
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump({
+                'circular': circular.a_list(),
+                'prioridad': priority.a_list()
+            }, f, indent=2, ensure_ascii=False)
+        return True
+    except (OSError, IOError) as e:
+        print(f"  ⚠ No se pudo exportar a {path}: {e}")
+        return False
+
 
 def import_waits(circular, priority, path):
     data = _load_json(path)
@@ -79,11 +82,10 @@ def import_waits(circular, priority, path):
             imports += 1
         else:
             print("  ⚠ Registro circular inválido, se omite")
-
     for e in data.get('prioridad', []):
         if isinstance(e, dict) and 'id' in e:
             priority.enqueue(e, e.get('p', 1))
             imports += 1
         else:
-             print("  ⚠ Registro de prioridad inválido, se omite")
+            print("  ⚠ Registro de prioridad inválido, se omite")
     return imports

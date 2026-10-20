@@ -1,11 +1,11 @@
-"""Lista doblemente enlaada con inserción ordenada por clave"""
-
+"""Lista doblemente enlazada con inserción ordenada por clave."""
 from double_node import DoubleNode
+
 
 class DoubleList:
     def __init__(self):
         self.head = None
-        self._queue = None
+        self._queue = None      # puntero al último nodo (tail)
         self._size = 0
 
     def insert_sort(self, value, key):
@@ -15,22 +15,22 @@ class DoubleList:
         if self.head is None:
             self.head = new_node
             self._queue = new_node
-            self._size +=1
+            self._size += 1
             return
 
         current = self.head
         while current and key(current.value) < new_key:
             current = current.next
 
-        if current is None:
+        if current is None:                     # insertar al final
             new_node.previous = self._queue
             self._queue.next = new_node
             self._queue = new_node
-        elif current == self.head:
+        elif current == self.head:              # insertar al inicio
             new_node.next = self.head
             self.head.previous = new_node
             self.head = new_node
-        else:
+        else:                                   # insertar en medio
             previous = current.previous
             new_node.previous = previous
             new_node.next = current
@@ -59,9 +59,8 @@ class DoubleList:
                 else:
                     self._queue = current.previous
                 self._size -= 1
-
                 return current.value
-        current = current.next
+            current = current.next          # FIX: dentro del while
         return None
 
     def loop_forward(self):
@@ -72,7 +71,7 @@ class DoubleList:
         return res
 
     def loop_backward(self):
-        res, current = []. self._queue
+        res, current = [], self._queue     # FIX: era []. self._queue
         while current:
             res.append(current.value)
             current = current.previous
@@ -86,10 +85,3 @@ class DoubleList:
 
     def __len__(self):
         return self._size
-
-
-    
-
-    
-
-            
