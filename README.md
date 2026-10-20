@@ -52,7 +52,7 @@ se conserva el estado actual) y las filas inválidas se omiten contando cuántas
 se vacía la pila de acciones. La cola simple no se persiste (no lo exige el enunciado); si algún
 ID importado coincide con alguien en ella, se retira de la cola simple.
 
-## Guía de defensa – casos de prueba mínimos (para el video)
+## Guía de defensa – casos de prueba mínimos 
 
 Cupos = 2 en todos los casos (opción 1).
 
