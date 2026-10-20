@@ -1,0 +1,12 @@
+{
+  "circular": [],
+  "prioridad": [
+    {
+      "id": 103,
+      "nombre": "Carmen Ruiz",
+      "correo": "ruiz@gmail.com",
+      "cod_curso": "Estructura de Datos",
+      "p": 3
+    }
+  ]
+}
