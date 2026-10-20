@@ -1,8 +1,5 @@
-"""Añade /src al sys.path para que los tests puedan importar los módulos.
-
-Este módulo debe importarse ANTES que cualquier clase del proyecto.
-Basta con `import _bootstrap` al inicio de cada archivo de test.
-"""
+"""Añade /src al sys.path para que los tests importen los módulos del proyecto.
+Se importa con `import _bootstrap` ANTES que cualquier clase del proyecto."""
 import os
 import sys
 
